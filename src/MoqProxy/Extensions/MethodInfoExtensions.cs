@@ -1,4 +1,5 @@
 ﻿using Moq;
+using MoqProxy.Utilities;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -21,8 +22,9 @@ namespace MoqProxy.Extensions
         {
             MethodInfo mockMethodInfo = methodInfo.GetMockMethodInfo();
             ParameterExpression instance = Expression.Parameter(typeof(T), nameof(instance));
-            MethodCallExpression methodCall = Expression.Call(instance, mockMethodInfo);
-
+            Expression[] parameters = mockMethodInfo.GetParameters().Select(x => x.GetExpression()).ToArray();
+            MethodCallExpression methodCall = Expression.Call(instance, mockMethodInfo, parameters);
+            
             return Expression.Lambda<Action<T>>(methodCall, instance);
         }
 
@@ -30,7 +32,8 @@ namespace MoqProxy.Extensions
         {
             MethodInfo mockMethodInfo = methodInfo.GetMockMethodInfo();
             ParameterExpression instance = Expression.Parameter(typeof(T), nameof(instance));
-            MethodCallExpression methodCall = Expression.Call(instance, mockMethodInfo);
+            Expression[] parameters = mockMethodInfo.GetParameters().Select(x => x.GetExpression()).ToArray();
+            MethodCallExpression methodCall = Expression.Call(instance, mockMethodInfo, parameters);
 
             return Expression.Lambda<Func<T, TOut>>(methodCall, instance);
         }
