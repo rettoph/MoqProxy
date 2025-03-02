@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace MoqProxy
+namespace MoqProxy.Utilities
 {
     internal class TypeArrayEqualityComparer : EqualityComparer<Type[]>
     {

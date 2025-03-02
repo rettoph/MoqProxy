@@ -1,5 +1,6 @@
 ﻿using Moq;
 using MoqProxy.Extensions;
+using MoqProxy.Utilities;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -20,7 +21,11 @@ namespace MoqProxy.MemberProxies
                 return proxy!;
             }
 
-            Type funcProxyType = typeof(FuncProxy<,>).MakeGenericType(typeof(T), methodInfo.ReturnType);
+            Type returnType = methodInfo.ReturnType.IsGenericParameter
+                ? typeof(It.IsAnyType)
+                : methodInfo.ReturnType;
+
+            Type funcProxyType = typeof(FuncProxy<,>).MakeGenericType(typeof(T), returnType);
             proxy = (FuncProxy<T>)(Activator.CreateInstance(funcProxyType, [methodInfo]) ?? throw new NotImplementedException());
 
             return proxy;

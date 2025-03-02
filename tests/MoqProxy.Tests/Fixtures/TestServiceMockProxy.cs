@@ -5,13 +5,13 @@ namespace MoqProxy.Tests.Fixtures
 {
     public class TestServiceMockProxy
     {
-        public Mock<ITestService> Mock { get; }
+        public Mock<ITestService> TargetMock { get; }
         public MockProxy<ITestService, ITestService> MockProxy { get; }
 
         public TestServiceMockProxy()
         {
-            this.Mock = new Mock<ITestService>();
-            this.MockProxy = new MockProxy<ITestService, ITestService>(this.Mock.Object);
+            this.TargetMock = new Mock<ITestService>();
+            this.MockProxy = new MockProxy<ITestService, ITestService>(this.TargetMock.Object);
         }
     }
 }

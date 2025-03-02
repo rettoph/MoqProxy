@@ -4,16 +4,16 @@ using System.Reflection;
 
 namespace MoqProxy
 {
-    public class MockProxy<TMock, TProxy> : Mock<TMock>
+    public class MockProxy<TMock, TTarget> : Mock<TMock>
         where TMock : class
-        where TProxy : class, TMock
+        where TTarget : class, TMock
     {
-        private readonly TProxy _proxied;
-        public TProxy Proxied => this._proxied;
+        private readonly TTarget _target;
+        public TTarget Target => this._target;
 
-        public MockProxy(TProxy proxied)
+        public MockProxy(TTarget target)
         {
-            this._proxied = proxied;
+            this._target = target;
             List<IMemberProxy<TMock>> memberProxies = [];
 
             MethodInfo[] methodInfos = typeof(TMock).GetMethods(BindingFlags.Instance | BindingFlags.Public);
@@ -28,7 +28,7 @@ namespace MoqProxy
 
             foreach (IMemberProxy<TMock> memberProxy in memberProxies)
             {
-                memberProxy.Setup(this, this._proxied);
+                memberProxy.Setup(this, this._target);
             }
         }
     }

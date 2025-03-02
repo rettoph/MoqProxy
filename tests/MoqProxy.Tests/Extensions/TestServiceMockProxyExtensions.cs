@@ -7,7 +7,7 @@ namespace MoqProxy.Tests.Extensions
 {
     public static class TestServiceMockProxyExtensions
     {
-        public static void InvokeExpressionThenVerifyProxied(
+        public static void InvokeActionThenVerifyProxied(
             this TestServiceMockProxy testServiceMockProxy,
             Expression<Action<ITestService>> expression,
             Func<Times> times)
@@ -17,17 +17,17 @@ namespace MoqProxy.Tests.Extensions
 
             // Verify
             testServiceMockProxy.MockProxy.Verify(expression, times);
-            testServiceMockProxy.Mock.Verify(expression, times);
+            testServiceMockProxy.TargetMock.Verify(expression, times);
         }
 
-        public static void InvokeExpressionThenVerifyProxied<TOut>(
+        public static void InvokeFuncThenVerifyProxied<TOut>(
             this TestServiceMockProxy testServiceMockProxy,
             Expression<Func<ITestService, TOut>> expression,
             Func<Times> times,
             TOut expectedResult)
         {
             // Setup
-            testServiceMockProxy.Mock.Setup(expression).Returns(expectedResult);
+            testServiceMockProxy.TargetMock.Setup(expression).Returns(expectedResult);
 
             // Invoke
             TOut result = expression.Compile()(testServiceMockProxy.MockProxy.Object);
@@ -35,7 +35,7 @@ namespace MoqProxy.Tests.Extensions
 
             // Verify
             testServiceMockProxy.MockProxy.Verify(expression, times);
-            testServiceMockProxy.Mock.Verify(expression, times);
+            testServiceMockProxy.TargetMock.Verify(expression, times);
         }
     }
 }
