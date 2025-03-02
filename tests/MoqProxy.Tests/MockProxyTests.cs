@@ -1,7 +1,7 @@
+using System.Linq.Expressions;
 using Moq;
 using MoqProxy.Tests.Extensions;
 using MoqProxy.Tests.Fixtures;
-using System.Linq.Expressions;
 
 namespace MoqProxy.Tests
 {
@@ -46,6 +46,39 @@ namespace MoqProxy.Tests
         {
             this.TestServiceMockProxy.InvokeActionThenVerifyProxied(
                 expression: x => x.GenericActionWithArguments<int, string>(1337_420, "xyz"),
+                times: Times.Once);
+        }
+
+        [Fact]
+        public void ActionWithRefArgument_IsProxied()
+        {
+            int anyInt = It.IsAny<int>();
+            Expression expression = Expression.Constant(anyInt, typeof(int));
+
+            this.TestServiceMockProxy.InvokeActionThenVerifyProxied(
+                expression: x => x.ActionWithRefArgument(ref It.Ref<int>.IsAny),
+                times: Times.Once);
+        }
+
+        [Fact]
+        public void ActionWithOutArgument_IsProxied()
+        {
+            int anyInt = It.IsAny<int>();
+            Expression expression = Expression.Constant(anyInt, typeof(int));
+
+            this.TestServiceMockProxy.InvokeActionThenVerifyProxied(
+                expression: x => x.ActionWithOutArgument(out It.Ref<int>.IsAny),
+                times: Times.Once);
+        }
+
+        [Fact]
+        public void ActionWithInArgument_IsProxied()
+        {
+            int anyInt = It.IsAny<int>();
+            Expression expression = Expression.Constant(anyInt, typeof(int));
+
+            this.TestServiceMockProxy.InvokeActionThenVerifyProxied(
+                expression: x => x.ActionWithInArgument(in It.Ref<int>.IsAny),
                 times: Times.Once);
         }
 
