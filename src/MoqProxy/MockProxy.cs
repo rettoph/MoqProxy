@@ -1,6 +1,6 @@
-﻿using Moq;
+﻿using System.Reflection;
+using Moq;
 using MoqProxy.MemberProxies;
-using System.Reflection;
 
 namespace MoqProxy
 {
@@ -8,12 +8,11 @@ namespace MoqProxy
         where TMock : class
         where TTarget : class, TMock
     {
-        private readonly TTarget _target;
-        public TTarget Target => this._target;
+        public TTarget Target { get; }
 
         public MockProxy(TTarget target)
         {
-            this._target = target;
+            this.Target = target;
             List<IMemberProxy<TMock>> memberProxies = [];
 
             MethodInfo[] methodInfos = typeof(TMock).GetMethods(BindingFlags.Instance | BindingFlags.Public);
@@ -28,7 +27,7 @@ namespace MoqProxy
 
             foreach (IMemberProxy<TMock> memberProxy in memberProxies)
             {
-                memberProxy.Setup(this, this._target);
+                memberProxy.Setup(this, this.Target);
             }
         }
     }
