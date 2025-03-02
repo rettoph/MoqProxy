@@ -32,4 +32,10 @@ namespace MoqProxy
             }
         }
     }
+
+    public class MockProxy<T>(T target) : MockProxy<T, T>(target)
+        where T : class
+    {
+
+    }
 }
